@@ -1,0 +1,215 @@
+basePath: /api/v1
+definitions:
+  web.CreateAndUpdateSuccessResponse:
+    properties:
+      code:
+        example: 200
+        type: integer
+      data:
+        $ref: '#/definitions/web.Todos'
+      status:
+        example: success
+        type: string
+    type: object
+  web.DeleteSuccessResponse:
+    properties:
+      code:
+        example: 200
+        type: integer
+      data:
+        example: "null"
+        type: string
+      status:
+        example: success
+        type: string
+    type: object
+  web.GetAllDataSuccessResponse:
+    properties:
+      code:
+        example: 200
+        type: integer
+      data:
+        items:
+          $ref: '#/definitions/web.Todos'
+        type: array
+      status:
+        example: success
+        type: string
+    type: object
+  web.InternalServerErrorResponse:
+    properties:
+      code:
+        example: 500
+        type: integer
+      data:
+        example: Data not found
+        type: string
+      status:
+        example: internal server error
+        type: string
+    type: object
+  web.NotFoundResponse:
+    properties:
+      code:
+        example: 404
+        type: integer
+      data:
+        example: Data not found
+        type: string
+      status:
+        example: not found
+        type: string
+    type: object
+  web.TodoPayload:
+    properties:
+      text:
+        type: string
+    type: object
+  web.Todos:
+    properties:
+      created_at:
+        example: "2023-11-13T11:51:04.319747+07:00"
+        type: string
+      id:
+        example: 1
+        type: integer
+      text:
+        example: hellooo, this is my First todo yaww!!
+        type: string
+      updated_at:
+        example: "2023-11-13T11:51:04.319747+07:00"
+        type: string
+    type: object
+host: localhost:4001
+info:
+  contact: {}
+  description: A Todo service API in Go using Gin framework
+  title: Todos Service API
+  version: "1.0"
+paths:
+  /todos:
+    get:
+      description: Get All todos data from db.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/web.GetAllDataSuccessResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/web.InternalServerErrorResponse'
+      summary: Get All todos
+      tags:
+      - todos
+    post:
+      description: Save todos data in Db.
+      parameters:
+      - description: Create todos
+        in: body
+        name: todos
+        required: true
+        schema:
+          $ref: '#/definitions/web.TodoPayload'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/web.CreateAndUpdateSuccessResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/web.InternalServerErrorResponse'
+      summary: Create todos
+      tags:
+      - todos
+  /todos/{Id}:
+    delete:
+      description: Delete todos data in db.
+      parameters:
+      - description: delete todos by id
+        in: path
+        name: todoId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/web.DeleteSuccessResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/web.NotFoundResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/web.InternalServerErrorResponse'
+      summary: Delete todos
+      tags:
+      - todos
+    get:
+      description: Get single todos data.
+      parameters:
+      - description: Get todos by id
+        in: path
+        name: todoId
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/web.CreateAndUpdateSuccessResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/web.NotFoundResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/web.InternalServerErrorResponse'
+      summary: Get todos
+      tags:
+      - todos
+    put:
+      description: Update todos data save in db.
+      parameters:
+      - description: update todos by id
+        in: path
+        name: todoId
+        required: true
+        type: string
+      - description: Update todos
+        in: body
+        name: tags
+        required: true
+        schema:
+          $ref: '#/definitions/web.TodoPayload'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/web.CreateAndUpdateSuccessResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/web.NotFoundResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/web.InternalServerErrorResponse'
+      summary: Update todos
+      tags:
+      - todos
+swagger: "2.0"
